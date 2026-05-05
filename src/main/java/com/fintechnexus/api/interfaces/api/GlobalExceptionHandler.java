@@ -42,18 +42,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponseDTO> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         log.warn("Data integrity violation: {}", ex.getMessage());
-        return ResponseEntity.badRequest().body(ErrorResponseDTO.of("A conflict occurred with the provided data"));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponseDTO.of("A conflict occurred with the provided data"));
     }
 
     @ExceptionHandler(AccountAlreadyExistsException.class)
     public ResponseEntity<ErrorResponseDTO> handleAccountAlreadyExists(AccountAlreadyExistsException ex) {
         log.warn("Data integrity violation for document: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(ErrorResponseDTO.of("Account already exists for document: " + ex.getMessage()));
+                .body(ErrorResponseDTO.of(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGeneric(Exception ex) {
+        log.error("Unexpected error: {}", ex.getMessage(), ex);
         return ResponseEntity.internalServerError().body(ErrorResponseDTO.of("An unexpected error occurred"));
     }
 
