@@ -1,7 +1,7 @@
 package com.fintechnexus.api.domain.exception;
 
 public class AccountAlreadyExistsException extends RuntimeException {
-    public AccountAlreadyExistsException(String message) {
-        super(message);
+    public AccountAlreadyExistsException(String maskedDocument) {
+        super("Account already exists for document: " + maskedDocument);
     }
 }

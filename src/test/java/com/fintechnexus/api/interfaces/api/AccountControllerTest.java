@@ -7,12 +7,12 @@ import com.fintechnexus.api.application.dto.ErrorResponseDTO;
 import com.fintechnexus.api.application.service.AccountService;
 import com.fintechnexus.api.domain.model.Account;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -53,7 +53,7 @@ class AccountControllerTest {
         }
 
         var result = mockMvc.perform(post("/accounts")
-                        .contentType(String.valueOf(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().is(expectedStatus.value()));
 
@@ -73,6 +73,8 @@ class AccountControllerTest {
 
         if (expectedError != null) {
             verify(accountService, never()).createAccount(any());
+        } else {
+            verify(accountService, times(1)).createAccount(any());
         }
     }
 
@@ -88,7 +90,7 @@ class AccountControllerTest {
     """;
 
         mockMvc.perform(post("/accounts")
-                        .contentType(String.valueOf(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Invalid value for accountType."));

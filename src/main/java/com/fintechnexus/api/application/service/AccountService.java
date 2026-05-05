@@ -31,6 +31,7 @@ public class AccountService {
     }
 
     private String maskDocument(String doc){
+        if (doc == null || doc.length() < 4) return "****";
         return "*".repeat(doc.length() - 4) + doc.substring(doc.length() - 4);
     }
 }
